@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "292016609457",
+    "project_id": "flutter-ict-aac",
+    "storage_bucket": "flutter-ict-aac.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:292016609457:android:b12422c4203ac6d7daaa90",
+        "android_client_info": {
+          "package_name": "com.example.ict_aac"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHfJSZFWlmoupjTQK8ZJTpRLUOnj7fh2A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
