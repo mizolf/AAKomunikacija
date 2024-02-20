@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'firebase_options.dart';
 
 import 'package:flutter/material.dart';
@@ -25,6 +26,7 @@ class App extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
           seedColor: Color.fromARGB(255, 255, 255, 241),
         ),
+        textTheme: GoogleFonts.latoTextTheme(),
       ),
       home: const HomeScreen(),
     );
