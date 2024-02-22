@@ -26,7 +26,7 @@ class App extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
           seedColor: Color.fromARGB(255, 255, 255, 241),
         ),
-        textTheme: GoogleFonts.latoTextTheme(),
+        textTheme: GoogleFonts.interTextTheme(),
       ),
       home: const HomeScreen(),
     );
