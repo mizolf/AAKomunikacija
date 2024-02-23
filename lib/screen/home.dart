@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ict_aac/models/pictogram.dart';
+import 'package:ict_aac/widgets/menu.dart';
 import 'package:ict_aac/widgets/pictogram_card.dart';
 
 List<String> categories = [
@@ -27,6 +28,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedPageIndex = 0;
   String categoriesTitle = '';
+  List<Pictogram> sentence = [];
 
   List<Pictogram> oftenUsed = [];
   List<Pictogram> people = [];
@@ -76,6 +78,55 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  Future<void> _showSentence(Pictogram pictogram) async {
+    final isExisting = sentence.contains(pictogram);
+
+    if (isExisting) {
+      await FirebaseFirestore.instance
+          .collection('sentence')
+          .where('label', isEqualTo: pictogram.label)
+          .where('description', isEqualTo: pictogram.description)
+          .where('category', isEqualTo: pictogram.category)
+          .snapshots()
+          .listen((querySnapshot) {
+        if (querySnapshot.docs.isNotEmpty) {
+          querySnapshot.docs.first.reference.delete();
+        }
+      });
+
+      setState(() {
+        sentence.remove(pictogram);
+      });
+    } else {
+      await FirebaseFirestore.instance
+          .collection('sentence')
+          .add(pictogram.toMap());
+
+      setState(() {
+        sentence.add(pictogram);
+      });
+    }
+  }
+
+  Future<void> _removeLastPictogram() async {
+    Pictogram lastPictogram = sentence.last;
+    await FirebaseFirestore.instance
+        .collection('sentence')
+        .where('label', isEqualTo: lastPictogram.label)
+        .where('description', isEqualTo: lastPictogram.description)
+        .where('category', isEqualTo: lastPictogram.category)
+        .snapshots()
+        .listen((querySnapshot) {
+      if (querySnapshot.docs.isNotEmpty) {
+        querySnapshot.docs.first.reference.delete();
+      }
+    });
+
+    setState(() {
+      sentence.remove(lastPictogram);
+    });
+  }
+
   void _selectPage(int index) {
     List<List<Pictogram>> pictograms = [
       oftenUsed,
@@ -89,75 +140,26 @@ class _HomeScreenState extends State<HomeScreen> {
       animals,
     ];
 
-    setState(() {
-      _selectedPageIndex++;
-    });
+    pushPage();
     currentView = pictograms[index];
     categoriesTitle = categories[index];
   }
 
+  void pushPage() {
+    setState(() {
+      _selectedPageIndex++;
+    });
+  }
+
+  void popPage() {
+    setState(() {
+      _selectedPageIndex--;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    Widget menu = SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Container(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                ),
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: categories.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      _selectPage(index);
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.all(4.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8.0),
-                        color: Colors.white,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            child: Text(
-                              categories[index],
-                              style: const TextStyle().copyWith(
-                                fontSize: 20,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          Container(
-                            height: 100,
-                            width: 100,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image:
-                                      AssetImage('assets/images/$index.jpg')),
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    Widget menu = Menu(categories: categories, selectPage: _selectPage);
     Widget content = SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -169,11 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _selectedPageIndex--;
-                      });
-                    },
+                    onPressed: popPage,
                     icon: const Icon(Icons.arrow_back, size: 24),
                   ),
                   Text(
@@ -197,7 +195,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 itemCount: currentView.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      _showSentence(currentView[index]);
+                    },
                     child: Container(
                       margin: const EdgeInsets.all(4.0),
                       decoration: BoxDecoration(
@@ -237,11 +237,45 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Container(
               margin: const EdgeInsets.all(8.0),
-              height: 100,
+              height: 150,
               width: MediaQuery.sizeOf(context).width,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.0),
                 color: Colors.white,
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: sentence.length,
+                      itemBuilder: (context, index) {
+                        return PictogramCard(pictogram: sentence[index]);
+                      },
+                    ),
+                  ),
+                  Container(
+                    width: 75,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        IconButton(
+                            onPressed: () {},
+                            icon: const Icon(
+                              Icons.play_arrow,
+                              size: 40,
+                            )),
+                        IconButton(
+                            onPressed: _removeLastPictogram,
+                            icon: const Icon(
+                              Icons.arrow_back,
+                              size: 40,
+                            )),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
             Container(
