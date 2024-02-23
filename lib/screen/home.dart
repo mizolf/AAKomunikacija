@@ -1,16 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ict_aac/models/pictogram.dart';
+import 'package:ict_aac/widgets/pictogram_card.dart';
 
 List<String> categories = [
-  'Potvrda',
+  'Često korišteno',
   'Osobe',
   'Radnje',
   'Pridjevi',
   'Upitne riječi',
   'Prijedlozi',
   'Promet',
-  'Trebam pomoć',
+  'Pomoć',
   'Životinje'
 ];
 
@@ -27,6 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedPageIndex = 0;
   String categoriesTitle = '';
 
+  List<Pictogram> oftenUsed = [];
   List<Pictogram> people = [];
   List<Pictogram> action = [];
   List<Pictogram> adjectives = [];
@@ -34,7 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Pictogram> prepositions = [];
   List<Pictogram> help = [];
   List<Pictogram> traffic = [];
-  List<Pictogram> affirmation = [];
   List<Pictogram> animals = [];
   late List<Pictogram> currentView = [];
 
@@ -66,8 +67,8 @@ class _HomeScreenState extends State<HomeScreen> {
           help.add(pictogram);
         } else if (pictogram.category == 'promet') {
           traffic.add(pictogram);
-        } else if (pictogram.category == 'potvrda') {
-          affirmation.add(pictogram);
+        } else if (pictogram.category == 'često') {
+          oftenUsed.add(pictogram);
         } else if (pictogram.category == 'životinja') {
           animals.add(pictogram);
         }
@@ -77,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _selectPage(int index) {
     List<List<Pictogram>> pictograms = [
-      affirmation,
+      oftenUsed,
       people,
       action,
       adjectives,
@@ -203,35 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.circular(8.0),
                         color: Colors.white,
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            child: Text(
-                              currentView[index].label,
-                              style: const TextStyle().copyWith(
-                                fontSize: 20,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          Container(
-                            height: 100,
-                            width: 100,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: NetworkImage(
-                                  currentView[index].image,
-                                  scale: 1.0,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      child: PictogramCard(pictogram: currentView[index]),
                     ),
                   );
                 },
