@@ -5,6 +5,7 @@ import 'package:ict_aac/widgets/menu.dart';
 import 'package:ict_aac/widgets/pictogram_card.dart';
 
 List<String> categories = [
+  'Moji simboli',
   'Često korišteno',
   'Osobe',
   'Radnje',
@@ -30,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String categoriesTitle = '';
   List<Pictogram> sentence = [];
 
+  List<Pictogram> custom = [];
   List<Pictogram> oftenUsed = [];
   List<Pictogram> people = [];
   List<Pictogram> action = [];
@@ -45,6 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _loadCategories();
+    _loadSentence();
   }
 
   Future<void> _loadCategories() async {
@@ -53,6 +56,13 @@ class _HomeScreenState extends State<HomeScreen> {
     final List<Pictogram> pictograms = pictogramsSnapshot.docs.map((doc) {
       return Pictogram.fromMap(doc.data() as Map<String, dynamic>);
     }).toList();
+
+    final customSnapshot =
+        await FirebaseFirestore.instance.collection('custom').get();
+    final List<Pictogram> customs = customSnapshot.docs.map((doc) {
+      return Pictogram.fromMap(doc.data() as Map<String, dynamic>);
+    }).toList();
+
     setState(() {
       for (final pictogram in pictograms) {
         if (pictogram.category == 'osoba') {
@@ -75,6 +85,18 @@ class _HomeScreenState extends State<HomeScreen> {
           animals.add(pictogram);
         }
       }
+      custom = customs;
+    });
+  }
+
+  Future<void> _loadSentence() async {
+    final pictogramsSnapshot =
+        await FirebaseFirestore.instance.collection('sentence').get();
+    final List<Pictogram> pictograms = pictogramsSnapshot.docs.map((doc) {
+      return Pictogram.fromMap(doc.data() as Map<String, dynamic>);
+    }).toList();
+    setState(() {
+      sentence = pictograms;
     });
   }
 
@@ -129,6 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _selectPage(int index) {
     List<List<Pictogram>> pictograms = [
+      custom,
       oftenUsed,
       people,
       action,
@@ -226,6 +249,41 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       drawer: Drawer(
         backgroundColor: Colors.white,
+        child: Container(
+          child: ListView(
+            children: [
+              DrawerHeader(
+                child: Text(
+                  'AAK',
+                  style: TextStyle().copyWith(fontSize: 32),
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.house_outlined),
+                title: Text(
+                  'NASLOVNA',
+                  style: const TextStyle().copyWith(fontSize: 18),
+                ),
+                onTap: () {},
+              ),
+              ListTile(
+                leading: const Icon(Icons.add_circle_outline_outlined),
+                title: Text(
+                  'DODAJ SVOJ SIMBOL',
+                  style: const TextStyle().copyWith(fontSize: 18),
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.info_outlined),
+                title: Text(
+                  'O APLIKACIJI',
+                  style: const TextStyle().copyWith(fontSize: 18),
+                ),
+                onTap: () {},
+              ),
+            ],
+          ),
+        ),
       ),
       backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       appBar: AppBar(
@@ -255,22 +313,21 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   Container(
-                    width: 75,
-                    child: Column(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.play_arrow,
-                              size: 40,
-                            )),
-                        IconButton(
                             onPressed: _removeLastPictogram,
                             icon: const Icon(
-                              Icons.arrow_back,
-                              size: 40,
+                              Icons.backspace,
+                              size: 36,
+                            )),
+                        IconButton(
+                            onPressed: () {},
+                            icon: const Icon(
+                              Icons.play_circle_fill,
+                              size: 36,
                             )),
                       ],
                     ),
