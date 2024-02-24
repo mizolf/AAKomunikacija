@@ -24,7 +24,7 @@ class App extends StatelessWidget {
       theme: ThemeData().copyWith(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Color.fromARGB(255, 255, 255, 241),
+          seedColor: Color.fromARGB(255, 227, 212, 255),
         ),
         textTheme: GoogleFonts.interTextTheme(),
       ),

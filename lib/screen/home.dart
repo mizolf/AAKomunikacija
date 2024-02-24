@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ict_aac/models/pictogram.dart';
+import 'package:ict_aac/screen/about.dart';
 import 'package:ict_aac/widgets/menu.dart';
 import 'package:ict_aac/widgets/pictogram_card.dart';
 
@@ -248,7 +249,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       drawer: Drawer(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.background,
         child: Container(
           child: ListView(
             children: [
@@ -272,6 +273,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   'DODAJ SVOJ SIMBOL',
                   style: const TextStyle().copyWith(fontSize: 18),
                 ),
+                onTap: () {},
               ),
               ListTile(
                 leading: const Icon(Icons.info_outlined),
@@ -279,7 +281,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   'O APLIKACIJI',
                   style: const TextStyle().copyWith(fontSize: 18),
                 ),
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: ((context) => const AboutScreen()),
+                    ),
+                  );
+                },
               ),
             ],
           ),
@@ -287,7 +295,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       appBar: AppBar(
-        title: const Text('ICT AAC'),
+        title: const Text('AAK'),
         backgroundColor: Colors.transparent,
       ),
       body: SingleChildScrollView(
