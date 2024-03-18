@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+
 import 'package:ict_aac/models/pictogram.dart';
 import 'package:ict_aac/screen/about.dart';
+import 'package:ict_aac/screen/new_pictogram.dart';
 import 'package:ict_aac/widgets/menu.dart';
 import 'package:ict_aac/widgets/pictogram_card.dart';
 
@@ -28,6 +31,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final FlutterTts flutterTts = FlutterTts();
   int _selectedPageIndex = 0;
   String categoriesTitle = '';
   List<Pictogram> sentence = [];
@@ -48,7 +52,27 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _loadCategories();
-    _loadSentence();
+  }
+
+  void initSettings() async {
+    await flutterTts.setLanguage("hr-HR");
+    await flutterTts.setPitch(1.0);
+    await flutterTts.setVolume(1.0);
+  }
+
+  Future<void> _speak(String text) async {
+    initSettings();
+    await flutterTts.speak(text);
+  }
+
+  void _playSentence(List<Pictogram> pictograms) {
+    initSettings();
+    String text = '';
+    for (Pictogram pictogram in pictograms) {
+      text += pictogram.label;
+      text += ' ';
+    }
+    _speak(text);
   }
 
   Future<void> _loadCategories() async {
@@ -90,41 +114,14 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Future<void> _loadSentence() async {
-    final pictogramsSnapshot =
-        await FirebaseFirestore.instance.collection('sentence').get();
-    final List<Pictogram> pictograms = pictogramsSnapshot.docs.map((doc) {
-      return Pictogram.fromMap(doc.data() as Map<String, dynamic>);
-    }).toList();
-    setState(() {
-      sentence = pictograms;
-    });
-  }
-
-  Future<void> _showSentence(Pictogram pictogram) async {
+  void _showSentence(Pictogram pictogram) {
     final isExisting = sentence.contains(pictogram);
 
     if (isExisting) {
-      await FirebaseFirestore.instance
-          .collection('sentence')
-          .where('label', isEqualTo: pictogram.label)
-          .where('description', isEqualTo: pictogram.description)
-          .where('category', isEqualTo: pictogram.category)
-          .snapshots()
-          .listen((querySnapshot) {
-        if (querySnapshot.docs.isNotEmpty) {
-          querySnapshot.docs.first.reference.delete();
-        }
-      });
-
       setState(() {
         sentence.remove(pictogram);
       });
     } else {
-      await FirebaseFirestore.instance
-          .collection('sentence')
-          .add(pictogram.toMap());
-
       setState(() {
         sentence.add(pictogram);
       });
@@ -133,17 +130,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _removeLastPictogram() async {
     Pictogram lastPictogram = sentence.last;
-    await FirebaseFirestore.instance
-        .collection('sentence')
-        .where('label', isEqualTo: lastPictogram.label)
-        .where('description', isEqualTo: lastPictogram.description)
-        .where('category', isEqualTo: lastPictogram.category)
-        .snapshots()
-        .listen((querySnapshot) {
-      if (querySnapshot.docs.isNotEmpty) {
-        querySnapshot.docs.first.reference.delete();
-      }
-    });
 
     setState(() {
       sentence.remove(lastPictogram);
@@ -221,6 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   return GestureDetector(
                     onTap: () {
                       _showSentence(currentView[index]);
+                      _speak(currentView[index].label);
                     },
                     child: Container(
                       margin: const EdgeInsets.all(4.0),
@@ -265,7 +252,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   'NASLOVNA',
                   style: const TextStyle().copyWith(fontSize: 18),
                 ),
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
               ),
               ListTile(
                 leading: const Icon(Icons.add_circle_outline_outlined),
@@ -273,7 +262,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   'DODAJ SVOJ SIMBOL',
                   style: const TextStyle().copyWith(fontSize: 18),
                 ),
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const NewPictogram(),
+                    ),
+                  );
+                },
               ),
               ListTile(
                 leading: const Icon(Icons.info_outlined),
@@ -332,7 +327,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               size: 36,
                             )),
                         IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              _playSentence(sentence);
+                            },
                             icon: const Icon(
                               Icons.play_circle_fill,
                               size: 36,
