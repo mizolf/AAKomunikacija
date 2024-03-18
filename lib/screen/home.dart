@@ -4,7 +4,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 
 import 'package:ict_aac/models/pictogram.dart';
 import 'package:ict_aac/screen/about.dart';
-import 'package:ict_aac/screen/new_pictogram.dart';
+import 'package:ict_aac/screen/add_pictogram.dart';
 import 'package:ict_aac/widgets/menu.dart';
 import 'package:ict_aac/widgets/pictogram_card.dart';
 
@@ -82,11 +82,15 @@ class _HomeScreenState extends State<HomeScreen> {
       return Pictogram.fromMap(doc.data() as Map<String, dynamic>);
     }).toList();
 
-    final customSnapshot =
-        await FirebaseFirestore.instance.collection('custom').get();
-    final List<Pictogram> customs = customSnapshot.docs.map((doc) {
-      return Pictogram.fromMap(doc.data() as Map<String, dynamic>);
-    }).toList();
+    final customSnapshot = await FirebaseFirestore.instance
+        .collection('custom')
+        .snapshots()
+        .listen((snapshot) {
+      final List<Pictogram> customs = snapshot.docs.map((doc) {
+        return Pictogram.fromMap(doc.data() as Map<String, dynamic>);
+      }).toList();
+      custom = customs;
+    });
 
     setState(() {
       for (final pictogram in pictograms) {
@@ -110,7 +114,6 @@ class _HomeScreenState extends State<HomeScreen> {
           animals.add(pictogram);
         }
       }
-      custom = customs;
     });
   }
 
@@ -265,7 +268,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => const NewPictogram(),
+                      builder: (context) => const AddPictogramScreen(),
                     ),
                   );
                 },
