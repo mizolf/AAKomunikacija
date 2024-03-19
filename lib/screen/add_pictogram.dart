@@ -1,6 +1,7 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:ict_aac/models/pictogram.dart";
+import "package:ict_aac/widgets/image_input.dart";
 
 class AddPictogramScreen extends StatefulWidget {
   const AddPictogramScreen({super.key});
@@ -66,11 +67,14 @@ class _AddPictogramScreenState extends State<AddPictogramScreen> {
             const SizedBox(
               height: 16,
             ),
+            const ImageInput(),
+            const SizedBox(
+              height: 16,
+            ),
             ElevatedButton.icon(
               icon: const Icon(Icons.add),
               onPressed: () {
                 _savePictogram();
-                Navigator.of(context).pop();
                 Navigator.of(context).pop();
               },
               label: const Text('Dodaj simbol'),
