@@ -245,7 +245,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               DrawerHeader(
                 child: Text(
-                  'AAK',
+                  'AAKomunikacija',
                   style: TextStyle().copyWith(fontSize: 32),
                 ),
               ),
@@ -293,7 +293,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       appBar: AppBar(
-        title: const Text('AAK'),
+        title: const Text('AAKomunikacija'),
         backgroundColor: Colors.transparent,
       ),
       body: SingleChildScrollView(

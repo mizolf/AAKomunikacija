@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ict_aac/screen/login.dart';
 import 'firebase_options.dart';
 
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'AAK',
+      title: 'AAKomunikacija',
       theme: ThemeData().copyWith(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
@@ -28,7 +29,7 @@ class App extends StatelessWidget {
         ),
         textTheme: GoogleFonts.interTextTheme(),
       ),
-      home: const HomeScreen(),
+      home: const LoginScreen(),
     );
   }
 }
