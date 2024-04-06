@@ -18,28 +18,31 @@ class _LoginScreenState extends State<LoginScreen> {
           Container(
             height: double.infinity,
             width: double.infinity,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 gradient: LinearGradient(
               colors: [
-                Theme.of(context).colorScheme.primaryContainer,
-                Colors.white,
+                Color.fromARGB(255, 117, 171, 238),
+                Color(0xFF61A4F1),
+                Color(0xFF478DE0),
+                Color.fromARGB(255, 49, 120, 202),
               ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             )),
           ),
           Container(
             height: double.infinity,
             child: SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 120.0),
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 40.0, vertical: 120.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     'Prijavi se',
                     style: TextStyle(
-                        color: Colors.black87,
+                        color: Colors.white,
                         fontSize: 30,
                         fontWeight: FontWeight.bold),
                   ),
@@ -49,22 +52,22 @@ class _LoginScreenState extends State<LoginScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Email',
                         style: TextStyle(
-                          color: Colors.black87,
+                          color: Colors.white,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 12,
                       ),
                       Container(
                         alignment: Alignment.centerLeft,
                         height: 60,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: const Color(0xFF6CA8F1),
                           borderRadius: BorderRadius.circular(10.0),
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(
                               color: Colors.black12,
                               blurRadius: 6.0,
@@ -72,16 +75,16 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ],
                         ),
-                        child: TextField(
+                        child: const TextField(
                           keyboardType: TextInputType.emailAddress,
-                          style: TextStyle(color: Colors.grey),
+                          style: TextStyle(color: Colors.white),
                           decoration: InputDecoration(
                               border: InputBorder.none,
                               contentPadding: EdgeInsets.only(top: 14),
                               prefixIcon: Icon(Icons.email_outlined,
-                                  color: Colors.grey),
+                                  color: Colors.white),
                               hintText: 'Unesite email adresu',
-                              hintStyle: TextStyle(color: Colors.grey)),
+                              hintStyle: TextStyle(color: Colors.white38)),
                         ),
                       ),
                     ],
@@ -92,22 +95,22 @@ class _LoginScreenState extends State<LoginScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Lozinka',
                         style: TextStyle(
-                          color: Colors.black87,
+                          color: Colors.white,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 12,
                       ),
                       Container(
                         alignment: Alignment.centerLeft,
                         height: 60,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: const Color(0xFF6CA8F1),
                           borderRadius: BorderRadius.circular(10.0),
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(
                               color: Colors.black12,
                               blurRadius: 6.0,
@@ -115,19 +118,46 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ],
                         ),
-                        child: TextField(
+                        child: const TextField(
                           obscureText: true,
                           keyboardType: TextInputType.emailAddress,
-                          style: TextStyle(color: Colors.grey),
+                          style: TextStyle(color: Colors.white),
                           decoration: InputDecoration(
                               border: InputBorder.none,
                               contentPadding: EdgeInsets.only(top: 14),
                               prefixIcon: Icon(
                                 Icons.password_outlined,
-                                color: Colors.grey,
+                                color: Colors.white,
                               ),
                               hintText: 'Unesite lozinku',
-                              hintStyle: TextStyle(color: Colors.grey)),
+                              hintStyle: TextStyle(color: Colors.white38)),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(vertical: 25),
+                        width: double.infinity,
+                        height: 100,
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            backgroundColor: Colors.white,
+                            shadowColor: Colors.black,
+                          ),
+                          child: const Text(
+                            'PRIJAVA',
+                            style: TextStyle(
+                              color: Color(0xFF527DAA),
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1.5,
+                              fontSize: 18,
+                            ),
+                          ),
                         ),
                       ),
                     ],
