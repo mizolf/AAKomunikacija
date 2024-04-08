@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ict_aac/screen/login.dart';
+import 'package:ict_aac/widget_tree.dart';
 import 'firebase_options.dart';
 
 import 'package:flutter/material.dart';
@@ -29,7 +30,7 @@ class App extends StatelessWidget {
         ),
         textTheme: GoogleFonts.interTextTheme(),
       ),
-      home: const LoginScreen(),
+      home: const WidgetTree(),
     );
   }
 }
