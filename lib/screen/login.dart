@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ict_aac/screen/home.dart';
+import 'package:ict_aac/models/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,6 +13,34 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  String? errorMessage = '';
+  bool isLogin = true;
+
+  final TextEditingController _controllerEmail = TextEditingController();
+  final TextEditingController _controllerPassword = TextEditingController();
+
+  Future<void> signInWithEmailAndPassword() async {
+    try {
+      await Auth().signInWithEmailAndPassword(
+          email: _controllerEmail.text, password: _controllerPassword.text);
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        errorMessage = e.message;
+      });
+    }
+  }
+
+  Future<void> createUserWithEmailAndPassword() async {
+    try {
+      await Auth().createUserWithEmailAndPassword(
+          email: _controllerEmail.text, password: _controllerPassword.text);
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        errorMessage = e.message;
+      });
+    }
+  }
+
   Widget _emailField() {
     return Container(
       alignment: Alignment.centerLeft,
@@ -26,10 +56,11 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ],
       ),
-      child: const TextField(
+      child: TextField(
+        controller: _controllerEmail,
         keyboardType: TextInputType.emailAddress,
-        style: TextStyle(color: Colors.white),
-        decoration: InputDecoration(
+        style: const TextStyle(color: Colors.white),
+        decoration: const InputDecoration(
             border: InputBorder.none,
             contentPadding: EdgeInsets.only(top: 14),
             prefixIcon: Icon(Icons.email_outlined, color: Colors.white),
@@ -54,11 +85,12 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ],
       ),
-      child: const TextField(
+      child: TextField(
+        controller: _controllerPassword,
         obscureText: true,
         keyboardType: TextInputType.emailAddress,
-        style: TextStyle(color: Colors.white),
-        decoration: InputDecoration(
+        style: const TextStyle(color: Colors.white),
+        decoration: const InputDecoration(
             border: InputBorder.none,
             contentPadding: EdgeInsets.only(top: 14),
             prefixIcon: Icon(
@@ -77,11 +109,9 @@ class _LoginScreenState extends State<LoginScreen> {
       width: double.infinity,
       height: 100,
       child: ElevatedButton(
-        onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => HomeScreen(),
-          ));
-        },
+        onPressed: isLogin
+            ? signInWithEmailAndPassword
+            : createUserWithEmailAndPassword,
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
@@ -89,14 +119,32 @@ class _LoginScreenState extends State<LoginScreen> {
           backgroundColor: Colors.white,
           shadowColor: Colors.black,
         ),
-        child: const Text(
-          'PRIJAVA',
-          style: TextStyle(
+        child: Text(
+          isLogin ? 'PRIJAVA' : 'REGISTRIRAJ SE',
+          style: const TextStyle(
             color: Color(0xFF527DAA),
             fontWeight: FontWeight.bold,
             letterSpacing: 1.5,
             fontSize: 18,
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _loginOrRegisterButton() {
+    return TextButton(
+      onPressed: () {
+        setState(() {
+          isLogin = !isLogin;
+        });
+      },
+      child: Text(
+        isLogin ? 'REGISTRIRAJ SE' : 'PRIJAVI SE',
+        style: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
         ),
       ),
     );
@@ -131,9 +179,9 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    'Prijavi se',
-                    style: TextStyle(
+                  Text(
+                    isLogin ? 'Prijavi se' : 'Registriraj se',
+                    style: const TextStyle(
                         color: Colors.white,
                         fontSize: 30,
                         fontWeight: FontWeight.bold),
@@ -187,23 +235,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(
                         height: 20,
                       ),
-                      GestureDetector(
-                        onTap: () {},
-                        child: const Text(
-                          'REGISTRIRAJ SE',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
+                      _loginOrRegisterButton(),
                     ],
                   ),
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );
