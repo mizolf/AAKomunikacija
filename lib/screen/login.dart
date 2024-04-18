@@ -20,25 +20,103 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _controllerPassword = TextEditingController();
 
   Future<void> signInWithEmailAndPassword() async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
     try {
       await Auth().signInWithEmailAndPassword(
           email: _controllerEmail.text, password: _controllerPassword.text);
+      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
-      setState(() {
-        errorMessage = e.message;
-      });
+      Navigator.pop(context);
+      if (e.code == 'user-not-found') {
+        _wrongEmailMessage();
+      } else if (e.code == 'wrong-password') {
+        _wrongPasswordMessage();
+      }
     }
   }
 
   Future<void> createUserWithEmailAndPassword() async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
     try {
       await Auth().createUserWithEmailAndPassword(
           email: _controllerEmail.text, password: _controllerPassword.text);
+      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
-      setState(() {
-        errorMessage = e.message;
-      });
+      Navigator.pop(context);
+      if (e.code == 'email-already-in-use') {
+        _accountExists();
+      }
     }
+  }
+
+  void _wrongEmailMessage() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Korisnik ne postoji'),
+          content: const Text('Unijeli ste krivi email.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Zatvori'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _wrongPasswordMessage() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Netočna zaporka'),
+          content: const Text('Unijeli ste krivu zaporku.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Zatvori'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _accountExists() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Email je korišten'),
+          content: const Text('Račun s ovim emailom već postoji.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Zatvori'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Widget _emailField() {
@@ -110,8 +188,12 @@ class _LoginScreenState extends State<LoginScreen> {
       height: 100,
       child: ElevatedButton(
         onPressed: isLogin
-            ? signInWithEmailAndPassword
-            : createUserWithEmailAndPassword,
+            ? () {
+                signInWithEmailAndPassword();
+              }
+            : () {
+                createUserWithEmailAndPassword();
+              },
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),

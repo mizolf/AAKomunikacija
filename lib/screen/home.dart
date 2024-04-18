@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
@@ -170,6 +171,10 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void _signOut() async {
+    await FirebaseAuth.instance.signOut();
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget menu = Menu(categories: categories, selectPage: _selectPage);
@@ -293,6 +298,10 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       appBar: AppBar(
+        actions: [
+          IconButton(
+              onPressed: _signOut, icon: const Icon(Icons.logout_outlined))
+        ],
         title: const Text('AAKomunikacija'),
         backgroundColor: Colors.transparent,
       ),
