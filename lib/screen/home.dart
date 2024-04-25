@@ -265,20 +265,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.add_circle_outline_outlined),
-                title: Text(
-                  'DODAJ SVOJ SIMBOL',
-                  style: const TextStyle().copyWith(fontSize: 18),
-                ),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const AddPictogramScreen(),
-                    ),
-                  );
-                },
-              ),
-              ListTile(
                 leading: const Icon(Icons.info_outlined),
                 title: Text(
                   'O APLIKACIJI',
@@ -333,22 +319,46 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         IconButton(
-                            onPressed: _removeLastPictogram,
-                            icon: const Icon(
-                              Icons.backspace,
-                              size: 36,
-                            )),
-                        IconButton(
-                            onPressed: () {
-                              _playSentence(sentence);
-                            },
-                            icon: const Icon(
-                              Icons.play_circle_fill,
-                              size: 36,
-                            )),
+                          onPressed: _removeLastPictogram,
+                          icon: const Icon(
+                            Icons.backspace,
+                            size: 36,
+                          ),
+                        ),
                       ],
                     ),
                   ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(8.0),
+              height: 100,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const AddPictogramScreen(),
+                        ),
+                      );
+                    },
+                    icon:
+                        const Icon(Icons.add_circle_outline_rounded, size: 32),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      _playSentence(sentence);
+                    },
+                    icon:
+                        const Icon(Icons.play_circle_filled_outlined, size: 60),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.access_time, size: 32),
+                  )
                 ],
               ),
             ),

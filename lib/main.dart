@@ -30,7 +30,7 @@ class App extends StatelessWidget {
         ),
         textTheme: GoogleFonts.interTextTheme(),
       ),
-      home: const WidgetTree(),
+      home: const HomeScreen(),
     );
   }
 }
