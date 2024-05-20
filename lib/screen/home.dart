@@ -49,10 +49,13 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Pictogram> animals = [];
   late List<Pictogram> currentView = [];
 
+  User? _currentUser;
+
   @override
   void initState() {
     super.initState();
     _loadCategories();
+    _getCurrentUser();
   }
 
   void initSettings() async {
@@ -175,6 +178,13 @@ class _HomeScreenState extends State<HomeScreen> {
     await FirebaseAuth.instance.signOut();
   }
 
+  void _getCurrentUser() async {
+    User? user = await FirebaseAuth.instance.currentUser;
+    setState(() {
+      _currentUser = user;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget menu = Menu(categories: categories, selectPage: _selectPage);
@@ -248,10 +258,21 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Container(
           child: ListView(
             children: [
-              DrawerHeader(
-                child: Text(
-                  'AAKomunikacija',
-                  style: TextStyle().copyWith(fontSize: 32),
+              UserAccountsDrawerHeader(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.background,
+                ),
+                accountName: Text(
+                  _currentUser?.email!.split('@')[0].toUpperCase() ?? 'No name',
+                  style: const TextStyle(color: Colors.black87),
+                ),
+                accountEmail: Text(
+                  _currentUser?.email ?? 'No email',
+                  style: const TextStyle(color: Colors.black87),
+                ),
+                currentAccountPicture: const Icon(
+                  Icons.person_3_outlined,
+                  size: 40,
                 ),
               ),
               ListTile(
@@ -278,16 +299,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 },
               ),
+              ListTile(
+                leading: const Icon(
+                  Icons.logout_outlined,
+                ),
+                title: Text(
+                  'ODJAVI SE',
+                  style: const TextStyle().copyWith(fontSize: 18),
+                ),
+                onTap: _signOut,
+              ),
             ],
           ),
         ),
       ),
       backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       appBar: AppBar(
-        actions: [
-          IconButton(
-              onPressed: _signOut, icon: const Icon(Icons.logout_outlined))
-        ],
         title: const Text('AAKomunikacija'),
         backgroundColor: Colors.transparent,
       ),
@@ -346,19 +373,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     },
                     icon:
-                        const Icon(Icons.add_circle_outline_rounded, size: 32),
+                        const Icon(Icons.add_circle_outline_rounded, size: 48),
                   ),
                   IconButton(
                     onPressed: () {
                       _playSentence(sentence);
                     },
                     icon:
-                        const Icon(Icons.play_circle_filled_outlined, size: 60),
+                        const Icon(Icons.play_circle_filled_outlined, size: 48),
                   ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.access_time, size: 32),
-                  )
                 ],
               ),
             ),
