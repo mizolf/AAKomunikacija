@@ -1,10 +1,13 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart' as path;
+import 'package:firebase_core/firebase_core.dart';
 
 class ImageInput extends StatefulWidget {
-  const ImageInput({super.key});
+  final void Function(String imageUrl) onImagePicked;
+  const ImageInput({required this.onImagePicked, super.key});
 
   @override
   State<ImageInput> createState() {
@@ -16,7 +19,7 @@ class _ImageInputState extends State<ImageInput> {
   final imagePicker = ImagePicker();
   File? _selectedImage;
 
-  void _takePicture() async {
+  Future<void> _takePicture() async {
     final pickedImage =
         await imagePicker.pickImage(source: ImageSource.camera, maxWidth: 600);
 
@@ -27,10 +30,42 @@ class _ImageInputState extends State<ImageInput> {
     setState(() {
       _selectedImage = File(pickedImage.path);
     });
+
+    await _uploadImage();
   }
 
-  void _addPicture() {
-    imagePicker.pickImage(source: ImageSource.gallery);
+  Future<void> _addPicture() async {
+    final pickedImage =
+        await imagePicker.pickImage(source: ImageSource.gallery);
+
+    if (pickedImage == null) {
+      return;
+    }
+
+    setState(() {
+      _selectedImage = File(pickedImage.path);
+    });
+
+    await _uploadImage();
+  }
+
+  Future<void> _uploadImage() async {
+    if (_selectedImage == null) {
+      return;
+    }
+
+    try {
+      final fileName = path.basename(_selectedImage!.path);
+      final storageRef =
+          FirebaseStorage.instance.ref().child('simboli/$fileName');
+      await storageRef.putFile(_selectedImage!);
+
+      final downloadUrl = await storageRef.getDownloadURL();
+      widget.onImagePicked(downloadUrl);
+      print('File uploaded successfully: $downloadUrl');
+    } catch (error) {
+      print('Error uploading image: $error');
+    }
   }
 
   @override

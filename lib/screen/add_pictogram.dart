@@ -12,17 +12,18 @@ class AddPictogramScreen extends StatefulWidget {
 
 class _AddPictogramScreenState extends State<AddPictogramScreen> {
   var _titleController = TextEditingController();
+  String? _imageUrl;
 
   void _savePictogram() async {
     final enteredText = _titleController.text;
 
-    if (enteredText.isEmpty) {
+    if (enteredText.isEmpty || _imageUrl == null) {
       return;
     }
 
     Pictogram pictogram = Pictogram(
       label: enteredText,
-      image: '',
+      image: _imageUrl!,
       custom: true,
       category: 'personalizirano',
       description: '',
@@ -31,6 +32,12 @@ class _AddPictogramScreenState extends State<AddPictogramScreen> {
     Map<String, dynamic> pictogramMap = pictogram.toMap();
 
     await FirebaseFirestore.instance.collection('custom').add(pictogramMap);
+  }
+
+  void _setImageUrl(String imageUrl) {
+    setState(() {
+      _imageUrl = imageUrl;
+    });
   }
 
   @override
@@ -67,7 +74,7 @@ class _AddPictogramScreenState extends State<AddPictogramScreen> {
             const SizedBox(
               height: 16,
             ),
-            const ImageInput(),
+            ImageInput(onImagePicked: _setImageUrl),
             const SizedBox(
               height: 16,
             ),
