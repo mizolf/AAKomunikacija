@@ -1,11 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ict_aac/screen/login.dart';
 import 'package:ict_aac/widget_tree.dart';
 import 'firebase_options.dart';
-
 import 'package:flutter/material.dart';
-import 'package:ict_aac/screen/home.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

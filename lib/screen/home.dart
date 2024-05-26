@@ -144,6 +144,49 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void _removeCustomPictogram(Pictogram pictogram) async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(_currentUser!.uid)
+        .collection('customPictograms')
+        .where('label', isEqualTo: pictogram.label)
+        .get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        doc.reference.delete();
+      });
+    });
+
+    setState(() {
+      custom.remove(pictogram);
+    });
+  }
+
+  void _showDialog(Pictogram pictogram) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Želite li obrisati piktogram?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                _removeCustomPictogram(pictogram);
+                Navigator.of(context).pop();
+              },
+              child: const Text('Obriši'),
+            ),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Ne želim obrisati'))
+          ],
+        );
+      },
+    );
+  }
+
   void _selectPage(int index) {
     List<List<Pictogram>> pictograms = [
       custom,
@@ -227,6 +270,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 itemCount: currentView.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
+                    onLongPress: () {
+                      if (currentView[index].category == 'personalizirano') {
+                        _showDialog(currentView[index]);
+                      }
+                    },
                     onTap: () {
                       _showSentence(currentView[index]);
                       _speak(currentView[index].label);
