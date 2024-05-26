@@ -1,4 +1,5 @@
 import "package:cloud_firestore/cloud_firestore.dart";
+import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:ict_aac/models/pictogram.dart";
 import "package:ict_aac/widgets/image_input.dart";
@@ -21,17 +22,27 @@ class _AddPictogramScreenState extends State<AddPictogramScreen> {
       return;
     }
 
-    Pictogram pictogram = Pictogram(
-      label: enteredText,
-      image: _imageUrl!,
-      custom: true,
-      category: 'personalizirano',
-      description: '',
-    );
+    User? currentUser = FirebaseAuth.instance.currentUser;
 
-    Map<String, dynamic> pictogramMap = pictogram.toMap();
+    if (currentUser != null) {
+      String userId = currentUser.uid;
 
-    await FirebaseFirestore.instance.collection('custom').add(pictogramMap);
+      Pictogram pictogram = Pictogram(
+        label: enteredText,
+        image: _imageUrl!,
+        custom: true,
+        category: 'personalizirano',
+        description: '',
+      );
+
+      Map<String, dynamic> pictogramMap = pictogram.toMap();
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('customPictograms')
+          .add(pictogramMap);
+    }
   }
 
   void _setImageUrl(String imageUrl) {

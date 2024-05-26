@@ -54,7 +54,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _loadCategories();
     _getCurrentUser();
   }
 
@@ -79,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _speak(text);
   }
 
-  Future<void> _loadCategories() async {
+  Future<void> _loadCategories(String userId) async {
     final pictogramsSnapshot =
         await FirebaseFirestore.instance.collection('pictograms').get();
     final List<Pictogram> pictograms = pictogramsSnapshot.docs.map((doc) {
@@ -87,7 +86,9 @@ class _HomeScreenState extends State<HomeScreen> {
     }).toList();
 
     final customSnapshot = await FirebaseFirestore.instance
-        .collection('custom')
+        .collection('users')
+        .doc(userId)
+        .collection('customPictograms')
         .snapshots()
         .listen((snapshot) {
       final List<Pictogram> customs = snapshot.docs.map((doc) {
@@ -183,6 +184,9 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _currentUser = user;
     });
+    if (user != null) {
+      await _loadCategories(user.uid);
+    }
   }
 
   @override
