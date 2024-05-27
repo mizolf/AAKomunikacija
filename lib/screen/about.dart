@@ -99,7 +99,7 @@ class AboutScreen extends StatelessWidget {
                           const Padding(
                             padding: const EdgeInsets.only(top: 10.0),
                             child: Text(
-                              'Općenito, aplikacije za AAK su važan alat za osobe s raznim komunikacijskim teškoćama, uključujući one s autizmom, cerebralnom paralizom, afazijom, te različitim sindromima i poremećajima koji utječu na sposobnost govora.',
+                              'Općenito, aplikacije za AAK su važan alat za osobe s raznim komunikacijskim i govornim teškoćama, uključujući one s autizmom, cerebralnom paralizom, te različitim sindromima i poremećajima koji utječu na sposobnost govora.',
                               style: TextStyle(fontSize: 14.0),
                             ),
                           ),
