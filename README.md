@@ -9,13 +9,16 @@ communication difficulties
 Mobilna aplikacija u sklopu završnog rada
 Mobile application as part of the Bachelor's Thesis
 
-![Screenshot_1736896937](https://github.com/user-attachments/assets/5714fa77-0635-4cc2-9e81-549b03b59ab7)
+![image](https://github.com/user-attachments/assets/9a41755b-f774-42b9-828f-b96892a501cf)
 
-![Screenshot_1736896957](https://github.com/user-attachments/assets/b9f6a6e6-fd84-42ba-8531-8650f4222927)
 
-![Screenshot_1736896977](https://github.com/user-attachments/assets/adbb5a7f-6023-41a6-ab64-2c0ed713b351)
+![image](https://github.com/user-attachments/assets/2893687c-f542-4cac-9c6f-4d79ed314b4d)
 
-![Screenshot_1736896998](https://github.com/user-attachments/assets/a5a3ff09-db85-4173-b3c7-0892407092e1)
+
+![image](https://github.com/user-attachments/assets/60af6ccf-6ad4-4d52-a0fe-456c91aa6e75)
+
+
+![image](https://github.com/user-attachments/assets/57525ba1-9e09-4357-bdfa-d46243f8d937)
 
 
 
