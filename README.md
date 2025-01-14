@@ -9,6 +9,9 @@ communication difficulties
 Mobilna aplikacija u sklopu završnog rada
 Mobile application as part of the Bachelor's Thesis
 
+###Technologies
+Flutter, Firebase, Text-to-speech, Image picker
+
 ![image](https://github.com/user-attachments/assets/9a41755b-f774-42b9-828f-b96892a501cf)
 
 
